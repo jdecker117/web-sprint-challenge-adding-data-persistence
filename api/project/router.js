@@ -7,21 +7,18 @@ const router = express.Router()
 router.get('/', (req, res, next) => {
     Project.getProjects()
     .then(result => {
-        console.log(result)
         res.status(200).json(result)
     })
 })
 
 router.post('/', (req, res, next) => {
-
-})
-
-router.use((err, req, res, next) => {
-    res.status(500).json({
-        customMessage: 'something went wrong with project router',
-        message: err.message,
-        stack: err.stack,
+    Project.postProject(req.body)
+    .then(result => {
+        console.log(result)
+        res.status(201).json(result)
     })
+    .catch(next)
 })
+
 
 module.exports = router

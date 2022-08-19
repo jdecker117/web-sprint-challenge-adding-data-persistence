@@ -3,7 +3,7 @@ const db = require('../../data/dbConfig')
 
 async function getProjects() {
     result = await db('projects as p')
-    .select('p.project_name', 'p.project_description', 'p.project_completed')
+    .select('p.project_id', 'p.project_name', 'p.project_description', 'p.project_completed')
     
     project = []
 
@@ -11,6 +11,7 @@ async function getProjects() {
         if(row.project_completed === 0){
             project.push(
                 {
+                    project_id: row.project_id,
                     project_name: row.project_name,
                     project_description: row.project_description,
                     project_completed: false
@@ -19,7 +20,8 @@ async function getProjects() {
         }
         else{
             project.push({
-                project_name: row.project_name,
+                    project_id: row.project_id,
+                    project_name: row.project_name,
                     project_description: row.project_description,
                     project_completed: true
             })
@@ -28,6 +30,23 @@ async function getProjects() {
     return project
 }
 
-function postProject() {}
+async function postProject(entry) {
+    await db('projects').insert(entry);
+    const answer = await getProjects()
+    return answer[answer.length - 1]
+    // .then(() => {
+    //     getProjects()[-1]
+    // })
+    
+    // const result = await db('projects')
+    // .insert(entry)
+    // .then(() => {
+    //     getProjects()
+    //     .then(res => {
+    //      return res[-1]   
+    //     })
+    // })
+    // return result
+}
 
 module.exports = {getProjects, postProject}

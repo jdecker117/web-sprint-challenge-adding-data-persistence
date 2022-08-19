@@ -5,19 +5,21 @@ const Task = require('./model')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
-
+    Task.getTasks()
+    .then(result => {
+        console.log(result)
+        res.status(200).json(result)
+    })
+    .catch(next)
 })
 
 router.post('/', (req, res, next) => {
-
-})
-
-router.use((err, req, res, next) => {
-    res.status(500).json({
-        customMessage: 'something went wrong with task router',
-        message: err.message,
-        stack: err.stack,
+    Task.postTask(req.body)
+    .then(result => {
+        res.status(201).json(result)
     })
+    .catch(next)
 })
+
 
 module.exports = router
